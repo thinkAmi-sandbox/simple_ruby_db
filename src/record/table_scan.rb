@@ -1,3 +1,4 @@
+require_relative './../query/constant'
 class TableScan
   attr_reader :buffer_pool_manager
   attr_reader :table_name
@@ -36,6 +37,11 @@ class TableScan
     record_page.get_string(field_name)
   end
 
+  def value(field_name)
+    return Constant.new(get_int(field_name)) if layout.schema.field_type(field_name) == :integer
+    Constant.new(get_string(field_name))
+  end
+
   def has_field?(field_name)
     layout.schema.has_field?(field_name)
   end
@@ -46,6 +52,11 @@ class TableScan
 
   def set_string(field_name, value)
     record_page.set_string(field_name, value)
+  end
+
+  def set_value(field_name, value)
+    set_int(field_name, value.int_value) if layout.schema.field_type(field_name) == :integer
+    set_string(field_name, value.string_value)
   end
 
   def insert

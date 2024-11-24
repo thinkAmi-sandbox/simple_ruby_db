@@ -25,16 +25,16 @@ class Schema
   end
 
   def add(field_name, schema)
-
+    add_field(field_name, schema.field_type(field_name), schema.field_length(field_name))
   end
 
   def add_all(schema)
-    schema.fields.each do |f|
-      add(f, schema)
+    schema.fields.each do |field_name|
+      add(field_name, schema)
     end
   end
 
-  def has_fields?(field_name)
+  def has_field?(field_name)
     fields.include?(field_name)
   end
 
