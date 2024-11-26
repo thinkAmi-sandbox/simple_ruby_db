@@ -1,0 +1,1 @@
+DeleteData = Data.define(:table_name, :predicate)

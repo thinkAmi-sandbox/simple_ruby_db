@@ -1,0 +1,1 @@
+InsertData = Data.define(:table_name, :field_list, :constant_list)

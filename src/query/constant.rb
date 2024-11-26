@@ -5,13 +5,23 @@ class Constant
   attr_reader :string_value
 
   def initialize(value)
-    if value.is_a? Integer
-      @int_value = value
+    if integer_like?(value)
+      # 文字列の数字も入ってくる可能性がある
+      @int_value = value.to_i
       @string_value = nil
     else
       @int_value = nil
+      # 文字列は 'foo' のようにシングルクォートで囲まれている場合もある
+      # ただ、QueryData#to_s のときに文字列をシングルクォートで囲いたいことから、そのままにしておく
       @string_value = value
     end
+  end
+
+  private def integer_like?(value)
+    Integer(value)
+    true
+  rescue ArgumentError
+    false
   end
 
   # Javaの equals の代わりに定義
