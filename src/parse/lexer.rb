@@ -52,7 +52,7 @@ class Lexer
   def eat_string
     # 大文字・小文字区別せず、英文字を取得する
     # なお、stringなので、前後にシングルークォートがある
-    r = string_scanner.scan(/'[[:alpha:]]+'/)
+    r = string_scanner.scan(/'[[:word:]]+'/)
     raise 'シンタックスに誤りがあります' if r.nil?
 
     skip_space
@@ -61,7 +61,7 @@ class Lexer
 
   def match_string?
     # stringでマッチするか判定する際、前後にシングルクォートがある事も忘れない
-    string_scanner.match?(/'[[:alpha:]]+'/)
+    string_scanner.match?(/'[[:word:]]+'/i)
   end
 
   def eat_keyword(keyword: nil)

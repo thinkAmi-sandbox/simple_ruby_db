@@ -1,4 +1,6 @@
 require_relative './../query/constant'
+require_relative './../record/record_page'
+
 class TableScan
   attr_reader :buffer_pool_manager
   attr_reader :table_name

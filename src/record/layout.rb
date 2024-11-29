@@ -45,4 +45,9 @@ class Layout
 
     integer_byte_length + (field_length * bytes_per_char)
   end
+
+  def slot_size
+    # slotは使ってないので、適当な固定値を返している
+    1
+  end
 end
