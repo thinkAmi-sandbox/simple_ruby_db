@@ -1,118 +1,127 @@
-require 'minitest/autorun'
-require_relative './../../src/parse/parser'
+# frozen_string_literal: true
 
-class ParserTest < Minitest::Test
-  def test_query
-    sql = "SELECT a, b FROM mytable WHERE a = 1 AND b = 'foo'"
+require_relative '../test_helper'
 
-    parser = Parser.new(sql)
-    actual = parser.query
+module Parse
+  class ParserTest < Minitest::Test
+    def test_query
+      sql = "SELECT a, b FROM mytable WHERE a = 1 AND b = 'foo'"
 
-    assert_equal %w[a b], actual.field_list
-    assert_equal ['mytable'], actual.table_list
-    assert_equal "select a, b from mytable where a=1 and b='foo'", actual.to_s
-  end
+      parser = SimpleRubyDb::Parse::Parser.new(sql)
+      actual = parser.query
 
-  def test_delete_statement
-    sql = "DELETE FROM mytable WHERE a = 'foo'"
+      assert_equal %w[a b], actual.field_list
+      assert_equal ['mytable'], actual.table_list
+      assert_equal "select a, b from mytable where a=1 and b='foo'", actual.to_s
+    end
 
-    parser = Parser.new(sql)
-    actual = parser.delete_statement
+    def test_delete_statement
+      sql = "DELETE FROM mytable WHERE a = 'foo'"
 
-    assert_equal 'mytable', actual.table_name
+      parser = SimpleRubyDb::Parse::Parser.new(sql)
+      actual = parser.delete_statement
 
-    expected = DeleteData.new('mytable',
-                              Predicate.new(term: Term.new(
-                                Expression.new(field_name: 'a'),
-                                Expression.new(value: Constant.new("'foo'")))))
+      assert_equal 'mytable', actual.table_name
 
-    # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
-    assert expected.inspect, actual.inspect
-  end
+      expected = SimpleRubyDb::Parse::DeleteData.new(
+        'mytable',
+        SimpleRubyDb::Query::Predicate.new(
+          term: SimpleRubyDb::Query::Term.new(
+            SimpleRubyDb::Query::Expression.new(field_name: 'a'),
+            SimpleRubyDb::Query::Expression.new(value: SimpleRubyDb::Query::Constant.new("'foo'")))))
 
-  def test_update_statement
-    # UPDATEは1項目のみ対応
-    sql = "UPDATE mytable SET a = 1 WHERE b = 'foo'"
+      # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
+      assert expected.inspect, actual.inspect
+    end
 
-    parser = Parser.new(sql)
-    actual = parser.update_statement
+    def test_update_statement
+      # UPDATEは1項目のみ対応
+      sql = "UPDATE mytable SET a = 1 WHERE b = 'foo'"
 
-    assert_equal 'mytable', actual.table_name
+      parser = SimpleRubyDb::Parse::Parser.new(sql)
+      actual = parser.update_statement
 
-    expected = ModifyData.new('mytable',
-                              'a',
-                              Expression.new(value: Constant.new(1)),
-                              Predicate.new(term: Term.new(
-                                Expression.new(field_name: 'b'),
-                                Expression.new(value: Constant.new("'foo'")))))
+      assert_equal 'mytable', actual.table_name
 
-    # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
-    assert expected.inspect, actual.inspect
-  end
+      expected = SimpleRubyDb::Parse::ModifyData.new(
+        'mytable',
+        'a',
+        SimpleRubyDb::Query::Expression.new(value: SimpleRubyDb::Query::Constant.new(1)),
+        SimpleRubyDb::Query::Predicate.new(term: SimpleRubyDb::Query::Term.new(
+          SimpleRubyDb::Query::Expression.new(field_name: 'b'),
+          SimpleRubyDb::Query::Expression.new(value: SimpleRubyDb::Query::Constant.new("'foo'")))))
 
-  def test_insert_statement
-    sql = "INSERT INTO mytable (a, b) VALUES (1, 'foo')"
+      # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
+      assert expected.inspect, actual.inspect
+    end
 
-    parser = Parser.new(sql)
-    actual = parser.insert_statement
+    def test_insert_statement
+      sql = "INSERT INTO mytable (a, b) VALUES (1, 'foo')"
 
-    assert_equal 'mytable', actual.table_name
+      parser = SimpleRubyDb::Parse::Parser.new(sql)
+      actual = parser.insert_statement
 
-    expected = InsertData.new('mytable',
-                              ['a', 'b'],
-                              [
-                                Constant.new(1),
-                                Constant.new("'foo'"),
-                              ])
+      assert_equal 'mytable', actual.table_name
 
-    assert_equal expected, actual
-  end
+      expected = SimpleRubyDb::Parse::InsertData.new('mytable',
+                                                     ['a', 'b'],
+                                                     [
+                                                       SimpleRubyDb::Query::Constant.new(1),
+                                                       SimpleRubyDb::Query::Constant.new("'foo'"),
+                                                     ])
 
-  def test_create_table_statement
-    sql = 'CREATE TABLE mytable (a INT, b VARCHAR(10))'
+      assert_equal expected, actual
+    end
 
-    parser = Parser.new(sql)
-    actual = parser.create_statement
+    def test_create_table_statement
+      sql = 'CREATE TABLE mytable (a INT, b VARCHAR(10))'
 
-    expected_schema = Schema.new
-    expected_schema.add_field('a', :integer, 0)
-    expected_schema.add_field('b', :varchar , 10)
+      parser = SimpleRubyDb::Parse::Parser.new(sql)
+      actual = parser.create_statement
 
-    expected = CreateTableData.new('mytable', expected_schema)
+      expected_schema = SimpleRubyDb::Record::Schema.new
+      expected_schema.add_field('a', :integer, 0)
+      expected_schema.add_field('b', :varchar , 10)
 
-    # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
-    assert expected.inspect, actual.inspect
-  end
+      expected = SimpleRubyDb::Parse::CreateTableData.new('mytable', expected_schema)
 
-  def test_create_view_statement
-    sql = "CREATE VIEW myview AS SELECT a, b FROM mytable WHERE a = 1 AND b = 'foo'"
+      # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
+      assert expected.inspect, actual.inspect
+    end
 
-    parser = Parser.new(sql)
-    actual = parser.create_statement
+    def test_create_view_statement
+      sql = "CREATE VIEW myview AS SELECT a, b FROM mytable WHERE a = 1 AND b = 'foo'"
 
-    expected_predicate = Predicate.new
-    expected_predicate.terms = [
-      Term.new(Expression.new(field_name: 'a'), Expression.new(value: Constant.new(1))),
-      Term.new(Expression.new(field_name: 'b'), Expression.new(value: Constant.new("'foo'"))),
-    ]
+      parser = SimpleRubyDb::Parse::Parser.new(sql)
+      actual = parser.create_statement
 
-    expected = CreateViewData.new('myview',
-                                  QueryData.new(['a', 'b'],
-                                                ['mytable'],
-                                                expected_predicate))
+      expected_predicate = SimpleRubyDb::Query::Predicate.new
+      expected_predicate.terms = [
+        SimpleRubyDb::Query::Term.new(
+          SimpleRubyDb::Query::Expression.new(field_name: 'a'),
+          SimpleRubyDb::Query::Expression.new(value: SimpleRubyDb::Query::Constant.new(1))),
+        SimpleRubyDb::Query::Term.new(
+          SimpleRubyDb::Query::Expression.new(field_name: 'b'),
+          SimpleRubyDb::Query::Expression.new(value: SimpleRubyDb::Query::Constant.new("'foo'"))),
+      ]
 
-    # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
-    assert expected.inspect, actual.inspect
-  end
+      expected = SimpleRubyDb::Parse::CreateViewData.new(
+        'myview',
+        SimpleRubyDb::Parse::QueryData.new(['a', 'b'], ['mytable'], expected_predicate))
 
-  def test_create_index_statement
-    sql = "CREATE INDEX myindex ON mytable (a)"
+      # オブジェクトは異なるが内容が同じかどうかを検証するため、 assert + inspect を使う
+      assert expected.inspect, actual.inspect
+    end
 
-    parser = Parser.new(sql)
-    actual = parser.create_statement
+    def test_create_index_statement
+      sql = "CREATE INDEX myindex ON mytable (a)"
 
-    expected = CreateIndexData.new('myindex', 'mytable', 'a')
+      parser = SimpleRubyDb::Parse::Parser.new(sql)
+      actual = parser.create_statement
 
-    assert_equal expected, actual
+      expected = SimpleRubyDb::Parse::CreateIndexData.new('myindex', 'mytable', 'a')
+
+      assert_equal expected, actual
+    end
   end
 end

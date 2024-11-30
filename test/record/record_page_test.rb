@@ -1,40 +1,39 @@
-require 'minitest/autorun'
-require_relative './../../src/disk/disk_manager'
-require_relative './../../src/buffer/buffer_pool'
-require_relative './../../src/buffer/buffer_pool_manager'
-require_relative './../../src/record/layout'
-require_relative './../../src/record/schema'
-require_relative './../../src/record/record_page'
+# frozen_string_literal: true
 
-class RecordPageTest < Minitest::Test
-  def test_record_page
-    temp_file = Tempfile.open(mode: 32770)
-    disk_manager = DiskManager.new(temp_file)
-    buffer_pool = BufferPool.new(1)
-    buffer_manager = BufferPoolManager.new(disk_manager, buffer_pool)
-    buffer = buffer_manager.create_page
+require_relative '../test_helper'
 
-    schema = Schema.new
-    schema.add_int_field('int_field_name')
-    schema.add_string_field('string_field_name', 9)
-    schema.add_int_field('int_field_name2')
+module Record
+  class RecordPageTest < Minitest::Test
+    def test_record_page
+      temp_file = Tempfile.open(mode: 32770)
+      disk_manager = SimpleRubyDb::Disk::DiskManager.new(temp_file)
+      buffer_pool = SimpleRubyDb::Buffer::BufferPool.new(1)
+      buffer_manager = SimpleRubyDb::Buffer::BufferPoolManager.new(disk_manager, buffer_pool)
+      buffer = buffer_manager.create_page
 
-    layout = Layout.new(schema)
-    record_page = RecordPage.new(buffer_manager, buffer.page_id, layout)
+      schema = SimpleRubyDb::Record::Schema.new
+      schema.add_int_field('int_field_name')
+      schema.add_string_field('string_field_name', 9)
+      schema.add_int_field('int_field_name2')
 
-    record_page.set_int('int_field_name', 123)
-    actual = record_page.get_int('int_field_name')
+      layout = SimpleRubyDb::Record::Layout.new(schema)
+      record_page = SimpleRubyDb::Record::RecordPage.new(buffer_manager, buffer.page_id, layout)
 
-    assert_equal 123, actual
+      record_page.set_int('int_field_name', 123)
+      actual = record_page.get_int('int_field_name')
 
-    record_page.set_string('string_field_name', 'hello')
-    actual = record_page.get_string('string_field_name')
+      assert_equal 123, actual
 
-    assert_equal 'hello', actual
+      record_page.set_string('string_field_name', 'hello')
+      actual = record_page.get_string('string_field_name')
 
-    record_page.set_int('int_field_name2', 101)
-    actual = record_page.get_int('int_field_name2')
+      assert_equal 'hello', actual
 
-    assert_equal 101, actual
+      record_page.set_int('int_field_name2', 101)
+      actual = record_page.get_int('int_field_name2')
+
+      assert_equal 101, actual
+    end
   end
 end
+
