@@ -1,1 +1,0 @@
-CreateViewData = Data.define(:view_name, :query)

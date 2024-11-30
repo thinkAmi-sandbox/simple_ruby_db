@@ -1,1 +1,0 @@
-CreateTableData = Data.define(:table_name, :schema)
