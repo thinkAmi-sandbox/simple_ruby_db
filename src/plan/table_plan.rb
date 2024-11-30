@@ -12,7 +12,7 @@ class TablePlan
     @table_name = table_name
     @buffer_pool_manager = buffer_pool_manager
 
-    @layout = metadata_manager.layout(table_name, buffer_pool_manager)
+    @layout = metadata_manager.layout(table_name)
 
     # TODO 今のところは実装しない
     # stat_info = metadata_manager.stat_info

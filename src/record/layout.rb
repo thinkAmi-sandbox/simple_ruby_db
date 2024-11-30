@@ -29,7 +29,7 @@ class Layout
   def length_in_bytes(field_name)
     field_type = schema.field_type(field_name)
 
-    return integer_byte_length if field_type == :integer
+    return integer_byte_length if field_type == 'integer'
 
     field_length = schema.field_length(field_name)
     string_byte_length(field_length)

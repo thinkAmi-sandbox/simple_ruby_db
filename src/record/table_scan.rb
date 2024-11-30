@@ -40,7 +40,7 @@ class TableScan
   end
 
   def value(field_name)
-    return Constant.new(get_int(field_name)) if layout.schema.field_type(field_name) == :integer
+    return Constant.new(get_int(field_name)) if layout.schema.field_type(field_name) == 'integer'
     Constant.new(get_string(field_name))
   end
 
@@ -57,8 +57,11 @@ class TableScan
   end
 
   def set_value(field_name, value)
-    set_int(field_name, value.int_value) if layout.schema.field_type(field_name) == :integer
-    set_string(field_name, value.string_value)
+    if layout.schema.field_type(field_name) == 'integer'
+      set_int(field_name, value.int_value)
+    else
+      set_string(field_name, value.string_value)
+    end
   end
 
   def insert
@@ -70,8 +73,8 @@ class TableScan
   end
 
   def delete
-    # slotは使ってないので、使おうとしたらエラーになるようにしておく
-    raise
+    # DELETE文は実装していないので、エラーとなるようにしておく
+    raise 'The DELETE statement is not implemented.'
   end
 
   def move_to_new_page

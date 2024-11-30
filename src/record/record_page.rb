@@ -53,7 +53,7 @@ class RecordPage
 
   def format
     layout.schema.fields.each do |field_name|
-      if layout.schema.field_type(field_name) == :integer
+      if layout.schema.field_type(field_name) == 'integer'
         set_int(field_name, 0)
       else
         set_string(field_name, '')

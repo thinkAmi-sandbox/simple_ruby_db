@@ -36,18 +36,21 @@ class BasicUpdatePlanner
 
   def execute_insert(insert_data, buffer_pool_manager)
     plan = TablePlan.new(buffer_pool_manager, insert_data.table_name, metadata_manager)
-    update_scan = plan.open
-    update_scan.insert
+
+    # 今回の実装の場合、plan.openでTableScanを都度生成すると先頭のページに書き込みしてしまう
+    # その結果、常に同じページへデータが書き込まれてしまうことから、それを回避するためにキャッシュしておく
+    @update_scan ||= plan.open
+    @update_scan.insert
 
     insert_data.field_list.zip(insert_data.constant_list) do |field_name, value|
-      update_scan.set_value(field_name, value)
+      @update_scan.set_value(field_name, value)
     end
 
     1
   end
 
-  def execute_create_table(create_table_data, buffer_bool_manager)
-    metadata_manager.create_table(create_table_data.table_name, create_table_data.schema, buffer_bool_manager)
+  def execute_create_table(create_table_data)
+    metadata_manager.create_table(create_table_data.table_name, create_table_data.schema)
 
     0
   end

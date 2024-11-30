@@ -8,10 +8,10 @@ class MetadataManager
   attr_reader :statistical_manager
   attr_reader :index_manager
 
-  def initialize(is_new, buffer_pool_manager)
+  def initialize(is_new, metadata_buffer_pool_manager)
     # TODO metadataを作るときにエラーとなるので、metadataなしで進められないか検討する
     #
-    @table_manager = TableManager.new(is_new, buffer_pool_manager)
+    @table_manager = TableManager.new(is_new, metadata_buffer_pool_manager)
     # @view_manager = ViewManager.new(is_new, table_manager, buffer_pool_manager)
     # @statistical_manager = StatisticalManager.new(table_manager, buffer_pool_manager)
 
@@ -19,12 +19,12 @@ class MetadataManager
     # @index_manager = IndexManager.new(is_new, table_manager, statistical_manager, buffer_pool_manager)
   end
 
-  def create_table(table_name, schema, buffer_pool_manager)
-    table_manager.create_table(table_name, schema, buffer_pool_manager)
+  def create_table(table_name, schema)
+    table_manager.create_table(table_name, schema)
   end
   
-  def layout(table_name, buffer_pool_manager)
-    table_manager.layout(table_name, buffer_pool_manager)
+  def layout(table_name)
+    table_manager.layout(table_name)
   end
 
   def create_view(view_name, view_def, buffer_pool_manager)

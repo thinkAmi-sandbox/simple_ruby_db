@@ -37,7 +37,7 @@ class IndexInfo
     schema.add_int_field('block')
     schema.add_int_field('id')
 
-    if schema.field_type(field_name) == :integer
+    if schema.field_type(field_name) == 'integer'
       length = table_schema.length(field_name)
       schema.add_string_field('dataval', length)
     end

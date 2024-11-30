@@ -6,9 +6,9 @@ class TableManager
 
   # attr_accessor :table_catalog_layout
   attr_accessor :field_catalog_layout
-  attr_reader :buffer_pool_manager
+  attr_reader :metadata_buffer_pool_manager
 
-  def initialize(is_new, buffer_pool_manager)
+  def initialize(is_new, metadata_buffer_pool_manager)
     # table_catalog_schema = Schema.new
     # table_catalog_schema.add_string_field('table_name', MAX_NAME)
     # table_catalog_schema.add_int_field('slot_size')
@@ -21,16 +21,17 @@ class TableManager
     field_catalog_schema.add_int_field('length')
     field_catalog_schema.add_int_field('offset')
     @field_catalog_layout = Layout.new(field_catalog_schema)
+    @metadata_buffer_pool_manager = metadata_buffer_pool_manager
 
     if is_new
       # create_table('table_catalog', table_catalog_schema, buffer_pool_manager)
-      create_table('field_catalog', field_catalog_schema, buffer_pool_manager)
+      create_table('field_catalog', field_catalog_schema)
     end
   end
 
-  def create_table(table_name, schema, buffer_pool_manager)
+  def create_table(table_name, schema)
     # create_table_catalog(table_name, schema, buffer_pool_manager)
-    create_field_catalog(table_name, schema, buffer_pool_manager)
+    create_field_catalog(table_name, schema)
   end
 
   # private def create_table_catalog(table_name, schema, buffer_pool_manager)
@@ -41,9 +42,9 @@ class TableManager
   #   table_scan.set_int('slot_size', layout.slot_size)
   # end
 
-  private def create_field_catalog(table_name, schema, buffer_pool_manager)
+  private def create_field_catalog(table_name, schema)
     layout = Layout.new(schema)
-    table_scan = TableScan.new(buffer_pool_manager, 'field_catalog', field_catalog_layout)
+    table_scan = TableScan.new(metadata_buffer_pool_manager, 'field_catalog', field_catalog_layout)
     schema.fields.each do |field_name|
       table_scan.insert
       table_scan.set_string('table_name', table_name)
@@ -54,10 +55,10 @@ class TableManager
     end
   end
 
-  def layout(table_name, manager)
+  def layout(table_name)
     schema = Schema.new
     offsets = {}
-    table_scan = TableScan.new(manager, 'field_catalog', field_catalog_layout)
+    table_scan = TableScan.new(metadata_buffer_pool_manager, 'field_catalog', field_catalog_layout)
 
     while table_scan.next
       if table_scan.get_string('table_name') == table_name

@@ -30,7 +30,7 @@ class Planner
     when ModifyData
       update_planner.execute_modify(data, buffer_pool_manager)
     when CreateTableData
-      update_planner.execute_create_table(data, buffer_pool_manager)
+      update_planner.execute_create_table(data)
     when CreateViewData
       update_planner.execute_create_view(data, buffer_pool_manager)
     when CreateIndexData
