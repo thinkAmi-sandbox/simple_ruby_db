@@ -1,39 +1,36 @@
 # SimpleRubyDb
 
-TODO: Delete this and the text below, and describe your gem
+Book "Database Design and Implementation Second Edition” implemented in Ruby.
+[Database Design and Implementation: Second Edition | SpringerLink](https://link.springer.com/book/10.1007/978-3-030-33836-7)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/simple_ruby_db`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Implementation
 
-## Installation
+- SQL
+  - CREATE TABLE
+  - INSERT
+  - UPDATE
+    - only 1 field
+  - SELECT
+  - WHERE
+    - only `=` operator
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+## NOT Implementation
 
-Install the gem and add to the application's Gemfile by executing:
+Many.
 
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
+- Plan
+- Index
+- Transaction
+- etc
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
 
 ## Usage
 
-TODO: Write usage instructions here
+you can bundle install it and run it on irb.
 
-## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## Tested Environment
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+- Ruby 3.3.5
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/simple_ruby_db.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+## Related Blog (Written in Japanese)
