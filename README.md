@@ -34,3 +34,5 @@ you can bundle install it and run it on irb.
 - Ruby 3.3.5
 
 ## Related Blog (Written in Japanese)
+
+- [書籍「Database Design and Implementation」の SimpleDB をベースに、必要最低限の機能を持つ RDBMS を Ruby で実装してみた - メモ的な思考的な](https://thinkami.hatenablog.com/entry/2024/12/14/223947)
