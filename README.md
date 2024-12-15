@@ -1,6 +1,6 @@
 # SimpleRubyDb
 
-Book "Database Design and Implementation Second Edition” implemented in Ruby.
+Book "Database Design and Implementation Second Edition” implemented in Ruby.  
 [Database Design and Implementation: Second Edition | SpringerLink](https://link.springer.com/book/10.1007/978-3-030-33836-7)
 
 ## Implementation
