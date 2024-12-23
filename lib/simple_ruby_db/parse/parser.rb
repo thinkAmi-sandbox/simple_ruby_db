@@ -65,7 +65,7 @@ module SimpleRubyDb
         SimpleRubyDb::Parse::QueryData.new(fields, tables, pred)
       end
 
-      def select_list
+      private def select_list
         [].tap do |result|
           result.push(field)
 
@@ -76,7 +76,7 @@ module SimpleRubyDb
         end
       end
 
-      def table_list
+      private def table_list
         [].tap do |result|
           result.push(lexer.eat_identifier)
 
