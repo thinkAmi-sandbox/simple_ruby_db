@@ -13,6 +13,8 @@ Book "Database Design and Implementation Second Edition” implemented in Ruby.
   - SELECT
   - WHERE
     - only `=` operator
+- PostgreSQL protocol
+  - Connectable via `psql`
 
 ## NOT Implementation
 
@@ -36,3 +38,4 @@ you can bundle install it and run it on irb.
 ## Related Blog (Written in Japanese)
 
 - [書籍「Database Design and Implementation」の SimpleDB をベースに、必要最低限の機能を持つ RDBMS を Ruby で実装してみた - メモ的な思考的な](https://thinkami.hatenablog.com/entry/2024/12/14/223947)
+- [Ruby製の自作RDBMSにて、PostgreSQLプロトコルに対応して psql でメッセージを交換できるようにしてみた - メモ的な思考的な](https://thinkami.hatenablog.com/entry/2024/12/23/201912)
